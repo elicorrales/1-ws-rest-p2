@@ -21,10 +21,6 @@ public class WebServiceContext {
 	private static final Logger logger = LoggerFactory.getLogger(WebServiceContext.class);
 
 
-    //@ApplicationPath("/ShapeCalculatorWebService")
-    //public class JaxRsApiApplication extends Application { }
-
-
     public WebServiceContext() {
     	logger.debug("\n\n\nConstructor\n\n\n");
     }
@@ -35,29 +31,12 @@ public class WebServiceContext {
 	    return new SpringBus();
 	}
 
-/*
-    @Bean
-    public JaxRsApiApplication jaxRsApiApplication() {
-		logger.debug("\n\n\n\nELI: WebServiceContext jaxRsApiApplication \n\n\n\n");
-        return new JaxRsApiApplication();
-    }
-*/
-
     @Bean
     public ShapeCalculatorWebService shapeCalculatorWebServiceImpl() {
 		logger.debug("\n\n\n\nWebServiceContext shapeCalculatorWebServiceImpl \n\n\n\n");
     	return new ShapeCalculatorWebServiceImpl();
     }
  
-/*
-    @Bean
-    public JacksonJsonProvider jsonProvider() {
-		logger.debug("\n\n\n\nWebServiceContext jsonProvider \n\n\n\n");
-    	return new JacksonJsonProvider();
-    }
-*/
-
-    //simple version
     @Bean
     @DependsOn("cxf")
     public Server jaxRsServer() {
@@ -65,56 +44,9 @@ public class WebServiceContext {
 		logger.debug("\n\n\n\nWebServiceContext JaxRsServer \n\n\n\n");
 
     	JAXRSServerFactoryBean factory = new JAXRSServerFactoryBean();
-/*
-        JAXRSServerFactoryBean factory = 
-        		RuntimeDelegate.getInstance().createEndpoint(
-        				jaxRsApiApplication(), 
-        				JAXRSServerFactoryBean.class);
-*/
     	factory.setServiceBean(shapeCalculatorWebServiceImpl());
     	factory.setAddress("/shapecalc");
-    	//factory.setProvider(jsonProvider());
-/*
-*/
 		logger.debug("\n\n\n\nEND OF WebServiceContext JaxRsServer \n\n\n\n");
     	return factory.create();
     }
-    
-/* 
-    // THIS WORKS COMPLETELY
-    @Bean
-    //@DependsOn("cxf")  // <----so far,this not needed
-    public Server jaxRsServer() {
-
-		logger.debug("\n\n\n\nWebServiceContext JaxRsServer \n\n\n\n");
-
-        JAXRSServerFactoryBean factory = 
-        		RuntimeDelegate.getInstance().createEndpoint(
-        				jaxRsApiApplication(), 
-        				JAXRSServerFactoryBean.class);
-
-    	factory.setServiceBean(shapeCalculatorWebServiceImpl());
-    	factory.setAddress("/ShapeCalculatorWebService");
-    	factory.setProvider(jsonProvider());
-		logger.debug("\n\n\n\nEND OF WebServiceContext JaxRsServer \n\n\n\n");
-        return factory.create();
-    }
-*/
-    
-/*
-    // so far, this version not needed
-    @Bean
-    @DependsOn("cxf")
-    public Server jaxRsServer(ApplicationContext appContext) {
-        JAXRSServerFactoryBean factory = 
-        		RuntimeDelegate.getInstance().createEndpoint(
-        				jaxRsApiApplication(), 
-        				JAXRSServerFactoryBean.class);
-        factory.setServiceBeans(Arrays.<Object>asList(userResource(), exceptionResource()));
-        factory.setAddress("/" + factory.getAddress());
-        factory.setProvider(jsonProvider());
-        return factory.create();
-    }
-*/
-
 }
